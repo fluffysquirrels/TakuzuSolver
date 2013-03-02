@@ -1,0 +1,13 @@
+== Performance optimisation ideas ==
+* Make a performance test suite that runs a few grids automatically and prints their run times.
+* Use typed integer arrays
+* Dirty cell tracking
+** Idea: when we set a cell to a value, only look for new contradictions in the same column and row as the new cell value. If n is the grid size, this would make basic contradiction checking O(n) instead of O(n^2) for every row and column, and looking for identical pairs of rows and columns O(n^2) instead of O(n^3).
+** Implementation: dirty flags on each row and column of the grid. Set dirty flags when a value is set, clear them when contradiction checking is done.
+* 2DArray.prototype.get and .set calculate x + y * width to find the correct slot for the cell in the array. Is this slow?
+** Try a nested 2D array.
+** Try rewriting some loops to use cellIndex += width or similar.
+* Try solving cells in a different order (currently it's just left to right, top to bottom)
+** Rationale: some cells are being solved repeatedly. The solver will guess a value upstream, solve square x, backtrack, guess a new value upstream, solve square x again. As a human I tend to solve as many easy squares as I can first.
+** To try: put some really basic cell solving (e.g. -11- => 0110) in, run it before the current algorithm.
+** To try: guess values for the fullest columns and rows first.
