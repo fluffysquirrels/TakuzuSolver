@@ -1,6 +1,6 @@
 require(['src/Array2D'], function (Array2D) {
     function main() {
-        var grid = makeBigExampleGrid();
+        var grid = makeExampleGrid14x14();
         var solutions = solveGrid(grid);
         
         $('#outText').empty();
@@ -11,7 +11,27 @@ require(['src/Array2D'], function (Array2D) {
         });
     }
     
-    function makeBigExampleGrid() {
+    function makeExampleGrid14x14() {
+        return parseGrid(
+            //        abcdefghijklmn
+            /*  1:*/ "0-----1--1----\n" +
+            /*  2:*/ "0-11----1-0-0-\n" +
+            /*  3:*/ "-0--1-0---0---\n" +
+            /*  4:*/ "------0--1---0\n" +
+            /*  5:*/ "0---------0---\n" +
+            /*  6:*/ "---00-----0---\n" +
+            /*  7:*/ "--0---11-----1\n" +
+            /*  8:*/ "----------0-0-\n" +
+            /*  9:*/ "0-0-0--0-1-1--\n" +
+            /* 10:*/ "0-1--0------0-\n" +
+            /* 11:*/ "----0--0-1----\n" +
+            /* 12:*/ "---0-1-0-1--1-\n" +
+            /* 13:*/ "0-------1---1-\n" +
+            /* 14:*/ "---00---0-----"
+        );
+    }
+    
+    function makeExampleGrid10x10() {
         return parseGrid(
             //        abcdefghij
             /*  1:*/ "--11---1--\n" +
@@ -27,23 +47,7 @@ require(['src/Array2D'], function (Array2D) {
         );
     }
     
-    function makeBigExampleGridOrig() {
-        return parseGrid(
-            //        abcdefghij
-            /*  1:*/ "--11---1--\n" +
-            /*  2:*/ "-1--------\n" +
-            /*  3:*/ "0--0--1-1-\n" +
-            /*  4:*/ "--1--1----\n" +
-            /*  5:*/ "---------1\n" +
-            /*  6:*/ "1-0----0--\n" +
-            /*  7:*/ "----1-1--1\n" +
-            /*  8:*/ "-0-0---1-0\n" +
-            /*  9:*/ "----1-----\n" +
-            /* 10:*/ "-0--1-11-1"
-        );
-    }
-    
-    function makeSmallExampleGrid() {
+    function makeExampleGrid4x4() {
         return parseGrid(
             " 1 0\n" + 
             "  0 \n" + 
@@ -72,14 +76,32 @@ require(['src/Array2D'], function (Array2D) {
         return grid;
     }
     
+    var perfStats;
+    
     function solveGrid(grid) {
+        resetPerfStats();
         console.time("solveGrid");
         var result = solveGridRecursive(grid);
         console.timeEnd("solveGrid");
+        printPerfStats();
         return result;
     }
     
+    function resetPerfStats() {
+        perfStats = {
+            contradictionSearches: 0,
+            contradictionSearchesPassed: 0,
+            solveGridRecursiveCalls: 0
+        };
+    }
+    
+    function printPerfStats() {
+        console.info(perfStats);
+    }
+    
     function solveGridRecursive(grid) {
+        perfStats.solveGridRecursiveCalls += 1;
+        
         if(gridHasContradiction(grid)) {
             return [];
         }
@@ -103,6 +125,8 @@ require(['src/Array2D'], function (Array2D) {
     }
     
     function gridHasContradiction(grid) {
+        perfStats.contradictionSearches += 1;
+    
         if(threeAdjacentInARow(grid)) {
             return true;
         }
@@ -122,6 +146,8 @@ require(['src/Array2D'], function (Array2D) {
             return true;
         }
 
+        perfStats.contradictionSearchesPassed += 1;
+        
         return false;
     }
     
