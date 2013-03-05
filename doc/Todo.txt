@@ -11,3 +11,7 @@
 ** Rationale: some cells are being solved repeatedly. The solver will guess a value upstream, solve square x, backtrack, guess a new value upstream, solve square x again. As a human I tend to solve as many easy squares as I can first.
 ** To try: put some really basic cell solving (e.g. -11- => 0110) in, run it before the current algorithm.
 ** To try: guess values for the fullest columns and rows first.
+
+== New features ==
+* Prettier display
+* Get puzzles from www.binarypuzzle.com

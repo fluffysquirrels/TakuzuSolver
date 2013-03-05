@@ -1,0 +1,3 @@
+=== Baseline ===
+solveGrid: 24731.000ms
+Object {contradictionSearches: 1164771, contradictionSearchesPassed: 582386, solveGridRecursiveCalls: 1164771}
