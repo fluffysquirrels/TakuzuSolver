@@ -24,7 +24,7 @@ define([], function() {
         return clone;
     };
     
-    Grid.emptyCell = null;
+    Grid.emptyCell = 255;
     
     return Grid;
 });

@@ -4,4 +4,14 @@ Object {contradictionSearches: 1164771, contradictionSearchesPassed: 582386, sol
 
 === After moving grid null value into variable ===
 solveGrid: 26374.000ms main.js:91
+Object {contradictionSearches: 1164771, contradictionSearchesPassed: 582386, solveGridRecursiveCalls: 1164771}
+
+=== Set cloned array contents with for loop instead of allocating a new array and then calling oldArray.slice(0) ===
+Rejecting this, because it's slower.
+
+solveGrid: 27785.000ms main.js:91
+Object {contradictionSearches: 1164771, contradictionSearchesPassed: 582386, solveGridRecursiveCalls: 1164771}
+
+=== Grid.emptyCell is an integer (255) instead of null ===
+solveGrid: 18649.000ms main.js:91
 Object {contradictionSearches: 1164771, contradictionSearchesPassed: 582386, solveGridRecursiveCalls: 1164771} 
