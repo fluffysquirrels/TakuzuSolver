@@ -1,14 +1,22 @@
-require(['src/Array2D'], function (Array2D) {
+require(['src/Grid'], function (Grid) {
+    var perfStats;
+    var emptyCellValue = Grid.emptyCell;
+    
     function main() {
-        var grid = makeExampleGrid14x14();
-        var solutions = solveGrid(grid);
-        
         $('#outText').empty();
-        solutions.forEach(function(solution) {
-            var solutionGrid = $('<div />');
-            renderGrid(solution, solutionGrid);
-            $('#outText').append(solutionGrid);
-        });
+        $('#outText').html("<pre>Solving . . .</pre>");
+        
+        setTimeout(function() {
+            var grid = makeExampleGrid14x14();
+            var solutions = solveGrid(grid);
+            
+            $('#outText').empty();
+            solutions.forEach(function(solution) {
+                var solutionGrid = $('<div />');
+                renderGrid(solution, solutionGrid);
+                $('#outText').append(solutionGrid);
+            });
+        }, 50);
     }
     
     function makeExampleGrid14x14() {
@@ -60,7 +68,7 @@ require(['src/Array2D'], function (Array2D) {
         var rows = s.split("\n");
         var rowLengths = rows.map(function(row) { return row.length; });
         var maxRowLength = Math.max.apply(null, rowLengths);
-        var grid = new Array2D(maxRowLength, rows.length);
+        var grid = new Grid(maxRowLength, rows.length);
         
         for(var ixRow = 0, numRows = rows.length; ixRow < numRows; ++ixRow) {
             var currRow = rows[ixRow];
@@ -68,15 +76,13 @@ require(['src/Array2D'], function (Array2D) {
                 var currCell = currRow[ixCol];
                 var value = currCell === '0' ? 0 :
                             currCell === '1' ? 1 :
-                            null;
+                            emptyCellValue;
                 grid.set(ixCol, ixRow, value);
             }
         }
         
         return grid;
     }
-    
-    var perfStats;
     
     function solveGrid(grid) {
         resetPerfStats();
@@ -247,8 +253,8 @@ require(['src/Array2D'], function (Array2D) {
                     var row1CellValue = grid.get(x, y1);
                     var row2CellValue = grid.get(x, y2);
                 
-                    if( row1CellValue === null ||
-                        row2CellValue === null ||
+                    if( row1CellValue === emptyCellValue ||
+                        row2CellValue === emptyCellValue ||
                         row1CellValue !== row2CellValue) {
                         rowsIdentical = false;
                         break;
@@ -272,8 +278,8 @@ require(['src/Array2D'], function (Array2D) {
                     var col1CellValue = grid.get(x1, y);
                     var col2CellValue = grid.get(x2, y);
                 
-                    if( col1CellValue === null ||
-                        col2CellValue === null ||
+                    if( col1CellValue === emptyCellValue ||
+                        col2CellValue === emptyCellValue ||
                         col1CellValue !== col2CellValue) {
                         colsIdentical = false;
                         break;
@@ -295,7 +301,7 @@ require(['src/Array2D'], function (Array2D) {
         for(var y = 0, numRows = grid.height; y < numRows; ++y) {
             for(var x = 0, numCols = grid.width; x < numCols; ++x) {
                 var currCell = grid.get(x, y);
-                if(currCell === null) {
+                if(currCell === emptyCellValue) {
                     return {x: x, y: y};
                 }
             }
@@ -310,7 +316,7 @@ require(['src/Array2D'], function (Array2D) {
         for(var y = 0; y < g.height; ++y) {
             for(var x = 0; x < g.width; ++x) {
                 var cellValue = g.get(x, y);
-                outHtml += cellValue === null ? "-" : cellValue;
+                outHtml += cellValue === emptyCellValue ? "-" : cellValue;
             }
             outHtml += "<br />";
         }
