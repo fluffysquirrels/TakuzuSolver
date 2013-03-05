@@ -115,17 +115,18 @@ require(['src/Grid'], function (Grid) {
         
         var firstGap = getFirstGap(grid);
         if(firstGap === null) {
-            return [grid];
+            return [grid.shallowClone()];
         }
         
         var solutions = [];
         
         for(var val = 0; val <= 1; ++val) {
-            var gridWithValue = grid.shallowClone();
-            gridWithValue.set(firstGap.x, firstGap.y, val);
+            grid.set(firstGap.x, firstGap.y, val);
             
-            var solutionsWithValue = solveGridRecursive(gridWithValue);
+            var solutionsWithValue = solveGridRecursive(grid);
             solutions.push.apply(solutions, solutionsWithValue);
+            
+            grid.set(firstGap.x, firstGap.y, emptyCellValue);
         }
         
         return solutions;
