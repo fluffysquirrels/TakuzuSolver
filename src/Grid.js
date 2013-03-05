@@ -2,12 +2,11 @@ define([], function() {
     function Grid(width, height)  {
         this.width = width;
         this.height = height;
-        
-        var cells = [];
-        for(var i = 0, len = width * height; i < len; ++i) {
-            cells.push(Grid.emptyCell);
+
+        this._cells = [];
+        for(var i = 0, numCells = this.width * this.height; i < numCells; ++i) {
+            this._cells.push(Grid.emptyCell);
         }
-        this._cells = cells;
     }
     
     Grid.prototype.get = function(x, y) {
