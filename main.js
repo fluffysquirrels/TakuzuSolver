@@ -11,6 +11,7 @@ require(['src/Grid'], function (Grid) {
             var solutions = solveGrid(grid);
             
             $('#outText').empty();
+            $('#outText').html("<pre>Solutions:</pre>");
             solutions.forEach(function(solution) {
                 var solutionGrid = $('<div />');
                 renderGrid(solution, solutionGrid);
@@ -162,16 +163,20 @@ require(['src/Grid'], function (Grid) {
         var maxTotal = grid.width / 2;
         
         for(var y = 0; y < grid.height; ++y) {
-            var totals = [0, 0];
+            var totalZeroes = 0;
+            var totalOnes = 0;
             
             for(var x = 0; x < grid.width; ++x) {
                 var value = grid.get(x, y);
-                if(value === 0 || value === 1) {
-                    totals[value] += 1;
+                if(value === 0) {
+                    totalZeroes += 1;
+                }
+                else if (value === 1) {
+                    totalOnes += 1;
                 }
             }
             
-            if(totals[0] > maxTotal || totals[1] > maxTotal) {
+            if(totalZeroes > maxTotal || totalOnes > maxTotal) {
                 return true;
             }
         }
@@ -182,16 +187,20 @@ require(['src/Grid'], function (Grid) {
         var maxTotal = grid.height / 2;
         
         for(var x = 0; x < grid.width; ++x) {
-            var totals = [0, 0];
+            var totalZeroes = 0;
+            var totalOnes = 0;
             
             for(var y = 0; y < grid.height; ++y) {
                 var value = grid.get(x, y);
-                if(value === 0 || value === 1) {
-                    totals[value] += 1;
+                if(value === 0) {
+                    totalZeroes += 1;
+                }
+                else if (value === 1) {
+                    totalOnes += 1;
                 }
             }
             
-            if(totals[0] > maxTotal || totals[1] > maxTotal) {
+            if(totalZeroes > maxTotal || totalOnes > maxTotal) {
                 return true;
             }
         }
