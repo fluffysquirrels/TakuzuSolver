@@ -98,7 +98,8 @@ require(['src/Grid'], function (Grid) {
         perfStats = {
             contradictionSearches: 0,
             contradictionSearchesPassed: 0,
-            solveGridRecursiveCalls: 0
+            solveGridRecursiveCalls: 0,
+            contradictionSearchReachedIdenticalRowColComparison: 0
         };
     }
     
@@ -147,6 +148,9 @@ require(['src/Grid'], function (Grid) {
         if(tooManyOfValueTotalInAColumn(grid)) {
             return true;
         }
+        
+        perfStats.contradictionSearchReachedIdenticalRowColComparison += 1;
+        
         if(twoIdenticalRows(grid)) {
             return true;
         }
