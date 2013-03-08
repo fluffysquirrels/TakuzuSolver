@@ -3,18 +3,25 @@ require(['src/Grid'], function (Grid) {
     var emptyCellValue = Grid.emptyCell;
     
     function main() {
+        $('#btnSolve').click(function() {
+            solveExample();
+        });
+    }
+    function solveExample() {
+        var grid = makeExampleGrid14x14();
+        
         $('#outText').empty();
-        $('#outText').html("<pre>Solving . . .</pre>");
+        $('#outText').append("<div>Solving</div>");
+        $('#outText').append(renderGridToElement(grid));
+        $('#outText').append($("<div id='progress'>Solving . . .</div>"));
         
         setTimeout(function() {
-            var grid = makeExampleGrid14x14();
+            $('#progress').remove();
             var solutions = solveGrid(grid);
             
-            $('#outText').empty();
-            $('#outText').html("<pre>Solutions:</pre>");
+            $('#outText').append($("<div>Solutions:</div>"));
             solutions.forEach(function(solution) {
-                var solutionGrid = $('<div />');
-                renderGrid(solution, solutionGrid);
+                var solutionGrid = renderGridToElement(solution);
                 $('#outText').append(solutionGrid);
             });
         }, 50);
@@ -324,7 +331,7 @@ require(['src/Grid'], function (Grid) {
         return null;
     }
     
-    function renderGrid(g, outElt) {
+    function renderGridToElement(g) {
         var outHtml = "<pre>";
         
         for(var y = 0; y < g.height; ++y) {
@@ -337,7 +344,7 @@ require(['src/Grid'], function (Grid) {
         
         outHtml += "</pre>";
         
-        outElt.html(outHtml);
+        return $(outHtml);
     }
     
     main();
