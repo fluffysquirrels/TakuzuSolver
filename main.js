@@ -14,18 +14,43 @@ require(['src/Grid'], function (Grid) {
         $('#outText').empty();
         $('#outText').append("<div>Solving</div>");
         $('#outText').append(renderGridToElement(grid));
-        $('#outText').append($("<div id='progress'>Solving . . .</div>"));
+
+        $('#outText').append($("<div id='progressResults'>Solving once for results . . .</div>"));
         
         setTimeout(function() {
-            $('#progress').remove();
             var solutions = solveGridWithStats(grid);
+            
+            $('#progressResults').remove();
             
             $('#outText').append($("<div>Solutions:</div>"));
             solutions.forEach(function(solution) {
                 var solutionGrid = renderGridToElement(solution);
                 $('#outText').append(solutionGrid);
             });
-        }, 50);
+            
+            var iterations = 50;
+            $('#outText').append($("<div id='progressTiming'>Solving " + iterations + " time(s) for timing . . .</div>"));
+            
+            setTimeout(function () {
+                var solveRepeatedlyProfileMessage = "solveGrid " + iterations + " time(s)";
+                
+                var beginTimeMs = Date.now();
+                
+                console.time(solveRepeatedlyProfileMessage);
+                for(var iter = 0; iter < iterations; ++iter) {
+                    var solutions = solveGridWithoutStats(grid);
+                }
+                console.timeEnd(solveRepeatedlyProfileMessage);
+                
+                var endTimeMs = Date.now();
+                console.info("Mean time is " + (endTimeMs - beginTimeMs) / iterations +  "ms");
+                
+                $('#progressTiming').remove();
+                
+                $('#outText').append($("<div>Solved " + iterations + " time(s) in " + (endTimeMs - beginTimeMs) +  "ms</div>"));
+                $('#outText').append($("<div>Mean time is " + (endTimeMs - beginTimeMs) / iterations +  "ms</div>"));
+            }, 1);
+        }, 1);
     }
     
     function makeExampleGrid14x14() {
@@ -103,6 +128,11 @@ require(['src/Grid'], function (Grid) {
         return result;
     }
     
+    function solveGridWithoutStats(grid) {
+        resetPerfStats();
+        return solveGrid(grid);
+    }
+    
     function resetPerfStats() {
         perfStats = {
             contradictionSearches: 0,
@@ -123,9 +153,6 @@ require(['src/Grid'], function (Grid) {
         }
         
         solveEasyCasesForWholeGrid(grid);
-        
-        $('#outText').append($("<div>After solving easy cases for initial grid:</div>"));
-        $('#outText').append(renderGridToElement(grid));
     
         return solveGridRecursive(grid, 0, 0);
     }

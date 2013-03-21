@@ -84,3 +84,8 @@ Object {contradictionSearches: 156738, contradictionSearchesPassed: 108329, solv
 === Extracted some boiler plate from easy case solving code. No performance change. ===
 solveGrid: 266.000ms main.js:100
 Object {contradictionSearches: 156738, contradictionSearchesPassed: 108329, solveGridRecursiveCalls: 96819, contradictionSearchReachedIdenticalRowColComparison: 108757, easyCasesFilled: 59918}
+
+=== Repeated run timing code. ===
+Object {contradictionSearches: 128196, contradictionSearchesPassed: 90362, solveGridRecursiveCalls: 75669, contradictionSearchReachedIdenticalRowColComparison: 90654, easyCasesFilled: 52526} main.js:147
+solveGrid 50 time(s): 9716.000ms main.js:43
+Mean time is 194.32ms main.js:46
