@@ -1,6 +1,7 @@
 require(['src/Grid'], function (Grid) {
     var perfStats;
     var emptyCellValue = Grid.emptyCell;
+    var invalidCellValue = emptyCellValue - 1;
     
     function main() {
         $('#btnSolve').click(function() {
@@ -107,7 +108,8 @@ require(['src/Grid'], function (Grid) {
             contradictionSearches: 0,
             contradictionSearchesPassed: 0,
             solveGridRecursiveCalls: 0,
-            contradictionSearchReachedIdenticalRowColComparison: 0
+            contradictionSearchReachedIdenticalRowColComparison: 0,
+            easyCasesFilled: 0
         };
     }
     
@@ -119,6 +121,11 @@ require(['src/Grid'], function (Grid) {
         if(gridHasContradiction(grid)) {
             return [];
         }
+        
+        solveEasyCasesForWholeGrid(grid);
+        
+        $('#outText').append($("<div>After solving easy cases for initial grid:</div>"));
+        $('#outText').append(renderGridToElement(grid));
     
         return solveGridRecursive(grid, 0, 0);
     }
@@ -129,6 +136,9 @@ require(['src/Grid'], function (Grid) {
         if(gridHasContradictionWithDirtyRowCol(grid, dirtyX, dirtyY)) {
             return [];
         }
+        
+        // solveEasyCasesForRow(grid, dirtyY);
+        // solveEasyCasesForColumn(grid, dirtyX);
         
         var cellToSet = getFirstGap(grid);
         if(cellToSet === null) {
@@ -147,6 +157,63 @@ require(['src/Grid'], function (Grid) {
         }
         
         return solutions;
+    }
+    
+    function solveEasyCasesForWholeGrid(grid) {
+        for(var y = 0; y < grid.height; ++y) {
+            solveEasyCasesForRow(grid, y);
+        }
+        
+        for(var x = 0; x < grid.width; ++x) {
+            solveEasyCasesForColumn(grid, x);
+        }
+    }
+    
+    function solveEasyCasesForRow(grid, y) {
+        // Fill --00-- cases in row
+        var prevValue = invalidCellValue;
+        for(var x = 0; x < grid.width; ++x) {
+            var currValue = grid.get(x, y);
+            if(currValue === prevValue && currValue !== emptyCellValue) {
+                if(x - 2 >= 0 && grid.get(x - 2, y) === emptyCellValue) {
+                    grid.set(x - 2, y, 1 - currValue);
+                    perfStats.easyCasesFilled += 1;
+                }
+                
+                if(x + 1 < grid.width && grid.get(x + 1, y) === emptyCellValue) {
+                    grid.set(x + 1, y, 1 - currValue);
+                    perfStats.easyCasesFilled += 1;
+                }
+            }
+            
+            prevValue = currValue;
+        }
+    }
+    
+    function solveEasyCasesForColumn(grid, x) {
+        // Fill | cases in row
+        //      |
+        //      0
+        //      0
+        //      |
+        //      |
+        var prevValue = invalidCellValue;
+        for(var y = 0; y < grid.height; ++y) {
+            var currValue = grid.get(x, y);
+            if(currValue === prevValue && currValue !== emptyCellValue) {
+                if(y - 2 >= 0 && grid.get(x, y - 2) === emptyCellValue) {
+                    grid.set(x, y - 2, 1 - currValue);
+                    perfStats.easyCasesFilled += 1;
+                }
+                
+                if(y + 1 < grid.height && grid.get(x, y + 1) === emptyCellValue) {
+                    grid.set(x, y + 1, 1 - currValue);
+                    perfStats.easyCasesFilled += 1;
+                }
+            }
+            
+            prevValue = currValue;
+        }
     }
     
     function gridHasContradictionWithDirtyRowCol(grid, x, y) {

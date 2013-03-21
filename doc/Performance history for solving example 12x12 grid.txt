@@ -68,3 +68,7 @@ Object {contradictionSearches: 1164772, contradictionSearchesPassed: 582387, sol
 === Smaller contradiction searches: inter-row and inter-column contradiction checks only run on the dirty grid row or column ===
 solveGrid: 1131.000ms main.js:99
 Object {contradictionSearches: 1174822, contradictionSearchesPassed: 587412, solveGridRecursiveCalls: 1174821, contradictionSearchReachedIdenticalRowColComparison: 588595}
+
+=== Solve some easy cases before recursive solve ===
+solveGrid: 298.000ms main.js:100
+Object {contradictionSearches: 341974, contradictionSearchesPassed: 170988, solveGridRecursiveCalls: 341973, contradictionSearchReachedIdenticalRowColComparison: 171423, easyCasesFilled: 24}
