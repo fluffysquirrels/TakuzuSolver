@@ -17,7 +17,7 @@ require(['src/Grid'], function (Grid) {
         
         setTimeout(function() {
             $('#progress').remove();
-            var solutions = solveGrid(grid);
+            var solutions = solveGridWithStats(grid);
             
             $('#outText').append($("<div>Solutions:</div>"));
             solutions.forEach(function(solution) {
@@ -92,12 +92,13 @@ require(['src/Grid'], function (Grid) {
         return grid;
     }
     
-    function solveGrid(grid) {
+    function solveGridWithStats(grid) {
         resetPerfStats();
         console.time("solveGrid");
-        var result = solveGridRecursive(grid);
+        var result = solveGrid(grid);
         console.timeEnd("solveGrid");
         printPerfStats();
+
         return result;
     }
     
@@ -114,30 +115,68 @@ require(['src/Grid'], function (Grid) {
         console.info(perfStats);
     }
     
-    function solveGridRecursive(grid) {
-        perfStats.solveGridRecursiveCalls += 1;
-        
+    function solveGrid(grid) {
         if(gridHasContradiction(grid)) {
             return [];
         }
+    
+        return solveGridRecursive(grid, 0, 0);
+    }
+    
+    function solveGridRecursive(grid, dirtyX, dirtyY) {
+        perfStats.solveGridRecursiveCalls += 1;
         
-        var firstGap = getFirstGap(grid);
-        if(firstGap === null) {
+        if(gridHasContradictionWithDirtyRowCol(grid, dirtyX, dirtyY)) {
+            return [];
+        }
+        
+        var cellToSet = getFirstGap(grid);
+        if(cellToSet === null) {
             return [grid.shallowClone()];
         }
         
         var solutions = [];
         
         for(var val = 0; val <= 1; ++val) {
-            grid.set(firstGap.x, firstGap.y, val);
+            grid.set(cellToSet.x, cellToSet.y, val);
             
-            var solutionsWithValue = solveGridRecursive(grid);
+            var solutionsWithValue = solveGridRecursive(grid, cellToSet.x, cellToSet.y);
             solutions.push.apply(solutions, solutionsWithValue);
             
-            grid.set(firstGap.x, firstGap.y, emptyCellValue);
+            grid.set(cellToSet.x, cellToSet.y, emptyCellValue);
         }
         
         return solutions;
+    }
+    
+    function gridHasContradictionWithDirtyRowCol(grid, x, y) {
+        perfStats.contradictionSearches += 1;
+    
+        if(threeAdjacentInGivenRow(grid, y)) {
+            return true;
+        }
+        if(threeAdjacentInGivenColumn(grid, x)) {
+            return true;
+        }
+        if(tooManyOfValueTotalInGivenRow(grid, y)) {
+            return true;
+        }
+        if(tooManyOfValueTotalInGivenColumn(grid, x)) {
+            return true;
+        }
+        
+        perfStats.contradictionSearchReachedIdenticalRowColComparison += 1;
+        
+        if(twoIdenticalRows(grid)) {
+            return true;
+        }
+        if(twoIdenticalColumns(grid)) {
+            return true;
+        }
+
+        perfStats.contradictionSearchesPassed += 1;
+        
+        return false;
     }
     
     function gridHasContradiction(grid) {
