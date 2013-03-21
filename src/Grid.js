@@ -1,11 +1,16 @@
 define([], function() {
-    function Grid(width, height)  {
+    function Grid(width, height, cells)  {
         this.width = width;
         this.height = height;
 
-        this._cells = [];
-        for(var i = 0, numCells = this.width * this.height; i < numCells; ++i) {
-            this._cells.push(Grid.emptyCell);
+        if(cells !== undefined) {
+            this._cells = cells;
+        }
+        else {
+            this._cells = [];
+            for(var i = 0, numCells = this.width * this.height; i < numCells; ++i) {
+                this._cells.push(Grid.emptyCell);
+            }
         }
     }
     
@@ -18,8 +23,7 @@ define([], function() {
     };
     
     Grid.prototype.shallowClone = function() {
-        var clone = new Grid(this.width, this.height);
-        clone._cells = this._cells.slice(0);
+        var clone = new Grid(this.width, this.height, this._cells.slice(0));
         return clone;
     };
     

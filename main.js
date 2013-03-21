@@ -148,12 +148,11 @@ require(['src/Grid'], function (Grid) {
         var solutions = [];
         
         for(var val = 0; val <= 1; ++val) {
-            grid.set(cellToSet.x, cellToSet.y, val);
+            var gridWithValue = grid.shallowClone();
+            gridWithValue.set(cellToSet.x, cellToSet.y, val);
             
-            var solutionsWithValue = solveGridRecursive(grid, cellToSet.x, cellToSet.y);
+            var solutionsWithValue = solveGridRecursive(gridWithValue, cellToSet.x, cellToSet.y);
             solutions.push.apply(solutions, solutionsWithValue);
-            
-            grid.set(cellToSet.x, cellToSet.y, emptyCellValue);
         }
         
         return solutions;
