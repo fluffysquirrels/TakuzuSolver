@@ -245,7 +245,7 @@ require(['src/Grid'], function (Grid) {
         return false;
     }
     function threeAdjacentInGivenRow(grid, y) {
-        var streakValue = null; // TODO: Try making this an int.
+        var streakValue = emptyCellValue; // Invalid initial value, which should never be returned.
         var streakCount = 0;
         
         for(var x = 0; x < grid.width; ++x) {
@@ -275,7 +275,7 @@ require(['src/Grid'], function (Grid) {
         return false;
     }
     function threeAdjacentInGivenColumn(grid, x) {
-        var streakValue = null; // TODO: Try making this an int.
+        var streakValue = emptyCellValue; // Invalid initial value, which should never be returned.
         var streakCount = 0;
         
         for(var y = 0; y < grid.width; ++y) {

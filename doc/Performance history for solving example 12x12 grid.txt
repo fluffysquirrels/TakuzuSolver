@@ -51,3 +51,7 @@ Object {contradictionSearches: 1164771, contradictionSearchesPassed: 582386, sol
 === Prep for smaller contradiction searches: extract per-row and per-column contradiction functions. Minimal performance difference. ===
 solveGrid: 10843.000ms main.js:99
 Object {contradictionSearches: 1164771, contradictionSearchesPassed: 582386, solveGridRecursiveCalls: 1164771, contradictionSearchReachedIdenticalRowColComparison: 583032}
+
+=== Change streakValue variable to be an int in 3 in a row contradiction tests ===
+solveGrid: 8224.000ms main.js:99
+Object {contradictionSearches: 1164771, contradictionSearchesPassed: 582386, solveGridRecursiveCalls: 1164771, contradictionSearchReachedIdenticalRowColComparison: 583032}
