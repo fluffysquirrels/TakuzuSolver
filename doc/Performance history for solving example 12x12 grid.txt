@@ -47,3 +47,7 @@ This is already ~60% faster, with no changes that required rewriting more than a
 === Added new stat contradictionSearchReachedIdenticalRowColComparison ===
 solveGrid: 10449.000ms main.js:92
 Object {contradictionSearches: 1164771, contradictionSearchesPassed: 582386, solveGridRecursiveCalls: 1164771, contradictionSearchReachedIdenticalRowColComparison: 583032}
+
+=== Prep for smaller contradiction searches: extract per-row and per-column contradiction functions. Minimal performance difference. ===
+solveGrid: 10843.000ms main.js:99
+Object {contradictionSearches: 1164771, contradictionSearchesPassed: 582386, solveGridRecursiveCalls: 1164771, contradictionSearchReachedIdenticalRowColComparison: 583032}

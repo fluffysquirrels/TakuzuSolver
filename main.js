@@ -143,16 +143,16 @@ require(['src/Grid'], function (Grid) {
     function gridHasContradiction(grid) {
         perfStats.contradictionSearches += 1;
     
-        if(threeAdjacentInARow(grid)) {
+        if(threeAdjacentInAnyRow(grid)) {
             return true;
         }
-        if(threeAdjacentInAColumn(grid)) {
+        if(threeAdjacentInAnyColumn(grid)) {
             return true;
         }
-        if(tooManyOfValueTotalInARow(grid)) {
+        if(tooManyOfValueTotalInAnyRow(grid)) {
             return true;
         }
-        if(tooManyOfValueTotalInAColumn(grid)) {
+        if(tooManyOfValueTotalInAnyColumn(grid)) {
             return true;
         }
         
@@ -171,95 +171,125 @@ require(['src/Grid'], function (Grid) {
     }
     
     
-    function tooManyOfValueTotalInARow(grid) {
+    function tooManyOfValueTotalInAnyRow(grid) {
         var maxTotal = grid.width / 2;
         
         for(var y = 0; y < grid.height; ++y) {
-            var totalZeroes = 0;
-            var totalOnes = 0;
-            
-            for(var x = 0; x < grid.width; ++x) {
-                var value = grid.get(x, y);
-                if(value === 0) {
-                    totalZeroes += 1;
-                }
-                else if (value === 1) {
-                    totalOnes += 1;
-                }
-            }
-            
-            if(totalZeroes > maxTotal || totalOnes > maxTotal) {
+            if(tooManyOfValueTotalInGivenRow(grid, y)) {
                 return true;
             }
         }
         
         return false;
     }
-    function tooManyOfValueTotalInAColumn(grid) {
-        var maxTotal = grid.height / 2;
+    function tooManyOfValueTotalInGivenRow(grid, y) {
+        var maxTotal = grid.width / 2;
+    
+        var totalZeroes = 0;
+        var totalOnes = 0;
         
         for(var x = 0; x < grid.width; ++x) {
-            var totalZeroes = 0;
-            var totalOnes = 0;
-            
-            for(var y = 0; y < grid.height; ++y) {
-                var value = grid.get(x, y);
-                if(value === 0) {
-                    totalZeroes += 1;
-                }
-                else if (value === 1) {
-                    totalOnes += 1;
-                }
+            var value = grid.get(x, y);
+            if(value === 0) {
+                totalZeroes += 1;
             }
-            
-            if(totalZeroes > maxTotal || totalOnes > maxTotal) {
+            else if (value === 1) {
+                totalOnes += 1;
+            }
+        }
+        
+        if(totalZeroes > maxTotal || totalOnes > maxTotal) {
+            return true;
+        }
+        
+        return false;
+    }
+    function tooManyOfValueTotalInAnyColumn(grid) {
+        for(var x = 0; x < grid.width; ++x) {
+            if(tooManyOfValueTotalInGivenColumn(grid, x)) {
                 return true;
             }
         }
         
         return false;
     }
-    function threeAdjacentInARow(grid) {
+    function tooManyOfValueTotalInGivenColumn(grid, x) {
+        var maxTotal = grid.height / 2;
+        
+        var totalZeroes = 0;
+        var totalOnes = 0;
+        
         for(var y = 0; y < grid.height; ++y) {
-            var streakValue = null;
-            var streakCount = 0;
-            
-            for(var x = 0; x < grid.width; ++x) {
-                var currValue = grid.get(x, y);
-                if((currValue === 0 || currValue === 1) && streakValue === currValue) {
-                    streakCount += 1;
-                }
-                else {
-                    streakValue = currValue;
-                    streakCount = 1;
-                }
-                
-                if(streakCount >= 3) {
-                    return true;
-                }
+            var value = grid.get(x, y);
+            if(value === 0) {
+                totalZeroes += 1;
+            }
+            else if (value === 1) {
+                totalOnes += 1;
+            }
+        }
+        
+        if(totalZeroes > maxTotal || totalOnes > maxTotal) {
+            return true;
+        }
+        
+        return false;
+    }
+    function threeAdjacentInAnyRow(grid) {
+        for(var y = 0; y < grid.height; ++y) {
+            if(threeAdjacentInGivenRow(grid, y)) {
+                return true;
             }
         }
         
         return false;
     }
-    function threeAdjacentInAColumn(grid) {
-        for(var x = 0; x < grid.height; ++x) {
-            var streakValue = null;
-            var streakCount = 0;
+    function threeAdjacentInGivenRow(grid, y) {
+        var streakValue = null; // TODO: Try making this an int.
+        var streakCount = 0;
+        
+        for(var x = 0; x < grid.width; ++x) {
+            var currValue = grid.get(x, y);
+            if((currValue === 0 || currValue === 1) && streakValue === currValue) {
+                streakCount += 1;
+            }
+            else {
+                streakValue = currValue;
+                streakCount = 1;
+            }
             
-            for(var y = 0; y < grid.width; ++y) {
-                var currValue = grid.get(x, y);
-                if((currValue === 0 || currValue === 1) && streakValue === currValue) {
-                    streakCount += 1;
-                }
-                else {
-                    streakValue = currValue;
-                    streakCount = 1;
-                }
-                
-                if(streakCount >= 3) {
-                    return true;
-                }
+            if(streakCount >= 3) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    function threeAdjacentInAnyColumn(grid) {
+        for(var x = 0; x < grid.height; ++x) {
+            if(threeAdjacentInGivenColumn(grid, x)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    function threeAdjacentInGivenColumn(grid, x) {
+        var streakValue = null; // TODO: Try making this an int.
+        var streakCount = 0;
+        
+        for(var y = 0; y < grid.width; ++y) {
+            var currValue = grid.get(x, y);
+            if((currValue === 0 || currValue === 1) && streakValue === currValue) {
+                streakCount += 1;
+            }
+            else {
+                streakValue = currValue;
+                streakCount = 1;
+            }
+            
+            if(streakCount >= 3) {
+                return true;
             }
         }
         
