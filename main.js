@@ -183,24 +183,14 @@ require(['src/Grid'], function (Grid) {
         for(var x = 0; x < grid.width; ++x) {
             var currValue = grid.get(x, y);
             if(currValue === prevValue && currValue !== emptyCellValue) {
-                if(x - 2 >= 0 && grid.get(x - 2, y) === emptyCellValue) {
-                    grid.set(x - 2, y, 1 - currValue);
-                    perfStats.easyCasesFilled += 1;
-                    if(gridHasContradictionWithDirtyRowCol(grid, x - 2, y)) {
-                        return true;
-                    }
-                    if(solveEasyCasesForRowAndColumn(grid, x - 2, y)) {
+                if(x - 2 >= 0) {
+                    if(setFoundEasyValueIfNotFilled(grid, x - 2, y, 1 - currValue)) {
                         return true;
                     }
                 }
                 
-                if(x + 1 < grid.width && grid.get(x + 1, y) === emptyCellValue) {
-                    grid.set(x + 1, y, 1 - currValue);
-                    perfStats.easyCasesFilled += 1;
-                    if(gridHasContradictionWithDirtyRowCol(grid, x + 1, y)) {
-                        return true;
-                    }
-                    if(solveEasyCasesForRowAndColumn(grid, x + 1, y)) {
+                if(x + 1 < grid.width) {
+                    if(setFoundEasyValueIfNotFilled(grid, x + 1, y, 1 - currValue)) {
                         return true;
                     }
                 }
@@ -224,24 +214,14 @@ require(['src/Grid'], function (Grid) {
         for(var y = 0; y < grid.height; ++y) {
             var currValue = grid.get(x, y);
             if(currValue === prevValue && currValue !== emptyCellValue) {
-                if(y - 2 >= 0 && grid.get(x, y - 2) === emptyCellValue) {
-                    grid.set(x, y - 2, 1 - currValue);
-                    perfStats.easyCasesFilled += 1;
-                    if(gridHasContradictionWithDirtyRowCol(grid, x, y - 2)) {
-                        return true;
-                    }
-                    if(solveEasyCasesForRowAndColumn(grid, x, y - 2)) {
+                if(y - 2 >= 0) {
+                    if(setFoundEasyValueIfNotFilled(grid, x, y - 2, 1 - currValue)) {
                         return true;
                     }
                 }
                 
-                if(y + 1 < grid.height && grid.get(x, y + 1) === emptyCellValue) {
-                    grid.set(x, y + 1, 1 - currValue);
-                    perfStats.easyCasesFilled += 1;
-                    if(gridHasContradictionWithDirtyRowCol(grid, x, y + 1)) {
-                        return true;
-                    }
-                    if(solveEasyCasesForRowAndColumn(grid, x, y + 1)) {
+                if(y + 1 < grid.height) {
+                    if(setFoundEasyValueIfNotFilled(grid, x, y + 1, 1 - currValue)) {
                         return true;
                     }
                 }
@@ -251,6 +231,20 @@ require(['src/Grid'], function (Grid) {
         }
         
         return false;
+    }
+    
+    function setFoundEasyValueIfNotFilled(grid, x, y, value) {
+        if(grid.get(x, y) !== emptyCellValue) {
+            return;
+        }
+        grid.set(x, y, value);
+        perfStats.easyCasesFilled += 1;
+        
+        if(gridHasContradictionWithDirtyRowCol(grid, x, y)) {
+            return true;
+        }
+        
+        return solveEasyCasesForRowAndColumn(grid, x, y);
     }
     
     function gridHasContradictionWithDirtyRowCol(grid, x, y) {

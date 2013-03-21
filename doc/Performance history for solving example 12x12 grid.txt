@@ -80,3 +80,7 @@ Object {contradictionSearches: 341974, contradictionSearchesPassed: 170988, solv
 === Using fixed and improved solving code for easy cases. Now fills in easy cases recursively ===
 solveGrid: 269.000ms main.js:100
 Object {contradictionSearches: 156738, contradictionSearchesPassed: 108329, solveGridRecursiveCalls: 96819, contradictionSearchReachedIdenticalRowColComparison: 108757, easyCasesFilled: 59918}
+
+=== Extracted some boiler plate from easy case solving code. No performance change. ===
+solveGrid: 266.000ms main.js:100
+Object {contradictionSearches: 156738, contradictionSearchesPassed: 108329, solveGridRecursiveCalls: 96819, contradictionSearchReachedIdenticalRowColComparison: 108757, easyCasesFilled: 59918}
