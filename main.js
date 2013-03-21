@@ -167,10 +167,10 @@ require(['src/Grid'], function (Grid) {
         
         perfStats.contradictionSearchReachedIdenticalRowColComparison += 1;
         
-        if(anyTwoIdenticalRows(grid)) {
+        if(anyRowIdenticalToThis(grid, x)) {
             return true;
         }
-        if(anyTwoIdenticalColumns(grid)) {
+        if(anyColumnIdenticalToThis(grid, y)) {
             return true;
         }
 
@@ -345,6 +345,18 @@ require(['src/Grid'], function (Grid) {
         
         return false;
     }
+    function anyRowIdenticalToThis(grid, y) {
+        for(var yOther = 0; yOther < grid.height; ++yOther) {
+            if(yOther === y) {
+                continue;
+            }
+            if(twoRowsIdentical(grid, y, yOther)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
     function twoRowsIdentical(grid, y1, y2) {
         var rowsIdentical = true;
         
@@ -368,6 +380,19 @@ require(['src/Grid'], function (Grid) {
                 if(twoColumnsIdentical(grid, x1, x2)) {
                     return true;
                 }
+            }
+        }
+        
+        return false;
+    }
+    
+    function anyColumnIdenticalToThis(grid, x) {
+        for(var xOther = 0; xOther < grid.width; ++xOther) {
+            if(xOther === x) {
+                continue;
+            }
+            if(twoColumnsIdentical(grid, x, xOther)) {
+                return true;
             }
         }
         

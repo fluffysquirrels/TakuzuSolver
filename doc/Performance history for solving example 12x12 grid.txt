@@ -56,7 +56,7 @@ Object {contradictionSearches: 1164771, contradictionSearchesPassed: 582386, sol
 solveGrid: 8224.000ms main.js:99
 Object {contradictionSearches: 1164771, contradictionSearchesPassed: 582386, solveGridRecursiveCalls: 1164771, contradictionSearchReachedIdenticalRowColComparison: 583032}
 
-=== Basic intra-row and intra-column contradiction checks only run on the dirty grid row ===
+=== Basic intra-row and intra-column contradiction checks only run on the dirty grid row or column ===
 This now runs quickly enough that my laptop CPU fan doesn't have time to come on!
 solveGrid: 2828.000ms main.js:99
 Object {contradictionSearches: 1164772, contradictionSearchesPassed: 582387, solveGridRecursiveCalls: 1164771, contradictionSearchReachedIdenticalRowColComparison: 583033}
@@ -64,3 +64,7 @@ Object {contradictionSearches: 1164772, contradictionSearchesPassed: 582387, sol
 === Prep for smaller contradiction searches: extract inter-row and inter-column contradiction functions. Might be slightly faster. ===
 solveGrid: 2764.000ms main.js:99
 Object {contradictionSearches: 1164772, contradictionSearchesPassed: 582387, solveGridRecursiveCalls: 1164771, contradictionSearchReachedIdenticalRowColComparison: 583033}
+
+=== Smaller contradiction searches: inter-row and inter-column contradiction checks only run on the dirty grid row or column ===
+solveGrid: 1131.000ms main.js:99
+Object {contradictionSearches: 1174822, contradictionSearchesPassed: 587412, solveGridRecursiveCalls: 1174821, contradictionSearchReachedIdenticalRowColComparison: 588595}
