@@ -76,3 +76,7 @@ Object {contradictionSearches: 341974, contradictionSearchesPassed: 170988, solv
 === Switch back to functional recursive solve instead of dancing links style. Hurts performance for now, but will allow more easy case solving. ===
 solveGrid: 428.000ms main.js:100
 Object {contradictionSearches: 341974, contradictionSearchesPassed: 170988, solveGridRecursiveCalls: 341973, contradictionSearchReachedIdenticalRowColComparison: 171423, easyCasesFilled: 24}
+
+=== Using fixed and improved solving code for easy cases. Now fills in easy cases recursively ===
+solveGrid: 269.000ms main.js:100
+Object {contradictionSearches: 156738, contradictionSearchesPassed: 108329, solveGridRecursiveCalls: 96819, contradictionSearchReachedIdenticalRowColComparison: 108757, easyCasesFilled: 59918}

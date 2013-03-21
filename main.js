@@ -137,8 +137,11 @@ require(['src/Grid'], function (Grid) {
             return [];
         }
         
-        // solveEasyCasesForRow(grid, dirtyY);
-        // solveEasyCasesForColumn(grid, dirtyX);
+        if(solveEasyCasesForRowAndColumn(grid, dirtyX, dirtyY))
+        {
+            // Setting easy row or column values found a contradiction
+            return [];
+        }
         
         var cellToSet = getFirstGap(grid);
         if(cellToSet === null) {
@@ -168,6 +171,12 @@ require(['src/Grid'], function (Grid) {
         }
     }
     
+    // Returns true if setting one of the cases caused a contradiction in the grid.
+    function solveEasyCasesForRowAndColumn(grid, x, y) {
+        return solveEasyCasesForRow(grid, y) || solveEasyCasesForColumn(grid, x);
+    }
+    
+    // Returns true if setting one of the cases caused a contradiction in the grid.
     function solveEasyCasesForRow(grid, y) {
         // Fill --00-- cases in row
         var prevValue = invalidCellValue;
@@ -177,20 +186,35 @@ require(['src/Grid'], function (Grid) {
                 if(x - 2 >= 0 && grid.get(x - 2, y) === emptyCellValue) {
                     grid.set(x - 2, y, 1 - currValue);
                     perfStats.easyCasesFilled += 1;
+                    if(gridHasContradictionWithDirtyRowCol(grid, x - 2, y)) {
+                        return true;
+                    }
+                    if(solveEasyCasesForRowAndColumn(grid, x - 2, y)) {
+                        return true;
+                    }
                 }
                 
                 if(x + 1 < grid.width && grid.get(x + 1, y) === emptyCellValue) {
                     grid.set(x + 1, y, 1 - currValue);
                     perfStats.easyCasesFilled += 1;
+                    if(gridHasContradictionWithDirtyRowCol(grid, x + 1, y)) {
+                        return true;
+                    }
+                    if(solveEasyCasesForRowAndColumn(grid, x + 1, y)) {
+                        return true;
+                    }
                 }
             }
             
             prevValue = currValue;
         }
+        
+        return false;
     }
     
+    // Returns true if setting one of the cases caused a contradiction in the grid.
     function solveEasyCasesForColumn(grid, x) {
-        // Fill | cases in row
+        // Fill | cases in column
         //      |
         //      0
         //      0
@@ -203,16 +227,30 @@ require(['src/Grid'], function (Grid) {
                 if(y - 2 >= 0 && grid.get(x, y - 2) === emptyCellValue) {
                     grid.set(x, y - 2, 1 - currValue);
                     perfStats.easyCasesFilled += 1;
+                    if(gridHasContradictionWithDirtyRowCol(grid, x, y - 2)) {
+                        return true;
+                    }
+                    if(solveEasyCasesForRowAndColumn(grid, x, y - 2)) {
+                        return true;
+                    }
                 }
                 
                 if(y + 1 < grid.height && grid.get(x, y + 1) === emptyCellValue) {
                     grid.set(x, y + 1, 1 - currValue);
                     perfStats.easyCasesFilled += 1;
+                    if(gridHasContradictionWithDirtyRowCol(grid, x, y + 1)) {
+                        return true;
+                    }
+                    if(solveEasyCasesForRowAndColumn(grid, x, y + 1)) {
+                        return true;
+                    }
                 }
             }
             
             prevValue = currValue;
         }
+        
+        return false;
     }
     
     function gridHasContradictionWithDirtyRowCol(grid, x, y) {
