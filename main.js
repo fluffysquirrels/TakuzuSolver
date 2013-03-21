@@ -15,6 +15,12 @@ require(['src/Grid'], function (Grid) {
         $('#outText').append("<div>Solving</div>");
         $('#outText').append(renderGridToElement(grid));
 
+        resetPerfStats();
+        var afterEasyCases = grid.shallowClone();
+        solveEasyCasesForWholeGrid(afterEasyCases);
+        $('#outText').append("<div>Grid after easy cases solved:</div>");
+        $('#outText').append(renderGridToElement(afterEasyCases));
+        
         $('#outText').append($("<div id='progressResults'>Solving once for results . . .</div>"));
         
         setTimeout(function() {
@@ -28,7 +34,7 @@ require(['src/Grid'], function (Grid) {
                 $('#outText').append(solutionGrid);
             });
             
-            var iterations = 50;
+            var iterations = 100;
             $('#outText').append($("<div id='progressTiming'>Solving " + iterations + " time(s) for timing . . .</div>"));
             
             setTimeout(function () {
@@ -205,6 +211,17 @@ require(['src/Grid'], function (Grid) {
     
     // Returns true if setting one of the cases caused a contradiction in the grid.
     function solveEasyCasesForRow(grid, y) {
+        // Fill --0-0-- cases in row
+        for(var x = 1; x < grid.width - 1; ++x) {
+            var leftValue = grid.get(x - 1, y);
+            var rightValue = grid.get(x + 1, y);
+            if(leftValue !== emptyCellValue && leftValue === rightValue) {
+                if(setFoundEasyValueIfNotFilled(grid, x, y, 1 - leftValue)) {
+                    return true;
+                }
+            }
+        }
+        
         // Fill --00-- cases in row
         var prevValue = invalidCellValue;
         for(var x = 0; x < grid.width; ++x) {
@@ -231,6 +248,23 @@ require(['src/Grid'], function (Grid) {
     
     // Returns true if setting one of the cases caused a contradiction in the grid.
     function solveEasyCasesForColumn(grid, x) {
+        // Fill | cases in column
+        //      |
+        //      0
+        //      |
+        //      0
+        //      |
+        //      |
+        for(var y = 1; y < grid.height - 1; ++y) {
+            var aboveValue = grid.get(x, y - 1);
+            var belowValue = grid.get(x, y + 1);
+            if(aboveValue !== emptyCellValue && aboveValue === belowValue) {
+                if(setFoundEasyValueIfNotFilled(grid, x, y, 1 - aboveValue)) {
+                    return true;
+                }
+            }
+        }
+        
         // Fill | cases in column
         //      |
         //      0
