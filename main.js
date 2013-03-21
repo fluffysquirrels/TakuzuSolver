@@ -167,10 +167,10 @@ require(['src/Grid'], function (Grid) {
         
         perfStats.contradictionSearchReachedIdenticalRowColComparison += 1;
         
-        if(twoIdenticalRows(grid)) {
+        if(anyTwoIdenticalRows(grid)) {
             return true;
         }
-        if(twoIdenticalColumns(grid)) {
+        if(anyTwoIdenticalColumns(grid)) {
             return true;
         }
 
@@ -197,10 +197,10 @@ require(['src/Grid'], function (Grid) {
         
         perfStats.contradictionSearchReachedIdenticalRowColComparison += 1;
         
-        if(twoIdenticalRows(grid)) {
+        if(anyTwoIdenticalRows(grid)) {
             return true;
         }
-        if(twoIdenticalColumns(grid)) {
+        if(anyTwoIdenticalColumns(grid)) {
             return true;
         }
 
@@ -334,24 +334,10 @@ require(['src/Grid'], function (Grid) {
         
         return false;
     }
-    function twoIdenticalRows(grid) {
+    function anyTwoIdenticalRows(grid) {
         for(var y1 = 0; y1 < grid.height; ++y1) {
             for(var y2 = y1 + 1; y2 < grid.height; ++y2) {
-                var rowsIdentical = true;
-                
-                for(var x = 0; x < grid.width; ++x) {
-                    var row1CellValue = grid.get(x, y1);
-                    var row2CellValue = grid.get(x, y2);
-                
-                    if( row1CellValue === emptyCellValue ||
-                        row2CellValue === emptyCellValue ||
-                        row1CellValue !== row2CellValue) {
-                        rowsIdentical = false;
-                        break;
-                    }
-                }
-                
-                if(rowsIdentical) {
+                if(twoRowsIdentical(grid, y1, y2)) {
                     return true;
                 }
             }
@@ -359,24 +345,27 @@ require(['src/Grid'], function (Grid) {
         
         return false;
     }
-    function twoIdenticalColumns(grid) {
+    function twoRowsIdentical(grid, y1, y2) {
+        var rowsIdentical = true;
+        
+        for(var x = 0; x < grid.width; ++x) {
+            var row1CellValue = grid.get(x, y1);
+            var row2CellValue = grid.get(x, y2);
+        
+            if( row1CellValue === emptyCellValue ||
+                row2CellValue === emptyCellValue ||
+                row1CellValue !== row2CellValue) {
+                rowsIdentical = false;
+                break;
+            }
+        }
+        
+        return rowsIdentical;
+    }
+    function anyTwoIdenticalColumns(grid) {
         for(var x1 = 0; x1 < grid.width; ++x1) {
             for(var x2 = x1 + 1; x2 < grid.width; ++x2) {
-                var colsIdentical = true;
-                
-                for(var y = 0; y < grid.height; ++y) {
-                    var col1CellValue = grid.get(x1, y);
-                    var col2CellValue = grid.get(x2, y);
-                
-                    if( col1CellValue === emptyCellValue ||
-                        col2CellValue === emptyCellValue ||
-                        col1CellValue !== col2CellValue) {
-                        colsIdentical = false;
-                        break;
-                    }
-                }
-                
-                if(colsIdentical) {
+                if(twoColumnsIdentical(grid, x1, x2)) {
                     return true;
                 }
             }
@@ -385,7 +374,23 @@ require(['src/Grid'], function (Grid) {
         return false;
     }
     
-    
+    function twoColumnsIdentical(grid, x1, x2) {
+        var colsIdentical = true;
+                
+        for(var y = 0; y < grid.height; ++y) {
+            var col1CellValue = grid.get(x1, y);
+            var col2CellValue = grid.get(x2, y);
+        
+            if( col1CellValue === emptyCellValue ||
+                col2CellValue === emptyCellValue ||
+                col1CellValue !== col2CellValue) {
+                colsIdentical = false;
+                break;
+            }
+        }
+        
+        return colsIdentical;
+    }
     
     function getFirstGap(grid) {
         for(var y = 0, numRows = grid.height; y < numRows; ++y) {
