@@ -94,3 +94,16 @@ Mean time is 246.16ms main.js:46
 Object {contradictionSearches: 44743, contradictionSearchesPassed: 32878, solveGridRecursiveCalls: 23731, contradictionSearchReachedIdenticalRowColComparison: 33158, easyCasesFilled: 21011} main.js:147
 solveGrid 100 time(s): 8123.000ms main.js:43
 Mean time is 81.23ms 
+
+
+=== Row and column fill tracking, with early abort from row / col are identical. Slower but has potential. ===
+
+solveGrid: 163.000ms main.js:139
+contradictionSearchReachedIdenticalRowColComparison: 32529
+contradictionSearches: 44080
+contradictionSearchesPassed: 32409
+easyCasesFilled: 20736
+solveEasyCasesForRowAndCol: 32408
+solveGridRecursiveCalls: 23343
+solveGrid 100 time(s): 12236.000ms main.js:57
+Mean time is 122.36ms 

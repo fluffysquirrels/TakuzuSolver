@@ -15,4 +15,5 @@
 == New features ==
 * Prettier display
 * Make a performance test suite that runs a few grids automatically and prints their run times.
+* Generate puzzles
 * Get puzzles from www.binarypuzzle.com

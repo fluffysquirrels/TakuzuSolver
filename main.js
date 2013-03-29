@@ -5,10 +5,14 @@ require(['src/Grid'], function (Grid) {
     
     function main() {
         $('#btnSolve').click(function() {
-            solveExample();
+            solveExample(true);
         });
+        $('#btnSolveQuick').click(function() {
+            solveExample(false);
+        });
+        btnSolveQuick
     }
-    function solveExample() {
+    function solveExample(accurateTiming) {
         var grid = makeExampleGrid14x14();
         
         $('#outText').empty();
@@ -33,6 +37,10 @@ require(['src/Grid'], function (Grid) {
                 var solutionGrid = renderGridToElement(solution);
                 $('#outText').append(solutionGrid);
             });
+            
+            if(!accurateTiming) {
+                return;
+            }
             
             var iterations = 100;
             $('#outText').append($("<div id='progressTiming'>Solving " + iterations + " time(s) for timing . . .</div>"));
@@ -145,7 +153,8 @@ require(['src/Grid'], function (Grid) {
             contradictionSearchesPassed: 0,
             solveGridRecursiveCalls: 0,
             contradictionSearchReachedIdenticalRowColComparison: 0,
-            easyCasesFilled: 0
+            easyCasesFilled: 0,
+            solveEasyCasesForRowAndCol: 0,
         };
     }
     
@@ -206,6 +215,7 @@ require(['src/Grid'], function (Grid) {
     
     // Returns true if setting one of the cases caused a contradiction in the grid.
     function solveEasyCasesForRowAndColumn(grid, x, y) {
+        perfStats.solveEasyCasesForRowAndCol += 1;
         return solveEasyCasesForRow(grid, y) || solveEasyCasesForColumn(grid, x);
     }
     
@@ -326,10 +336,11 @@ require(['src/Grid'], function (Grid) {
         
         perfStats.contradictionSearchReachedIdenticalRowColComparison += 1;
         
-        if(anyRowIdenticalToThis(grid, x)) {
+        if(anyRowIdenticalToThis(grid, y)) {
             return true;
         }
-        if(anyColumnIdenticalToThis(grid, y)) {
+
+        if(anyColumnIdenticalToThis(grid, x)) {
             return true;
         }
 
@@ -368,10 +379,7 @@ require(['src/Grid'], function (Grid) {
         return false;
     }
     
-    
     function tooManyOfValueTotalInAnyRow(grid) {
-        var maxTotal = grid.width / 2;
-        
         for(var y = 0; y < grid.height; ++y) {
             if(tooManyOfValueTotalInGivenRow(grid, y)) {
                 return true;
@@ -505,8 +513,17 @@ require(['src/Grid'], function (Grid) {
         return false;
     }
     function anyRowIdenticalToThis(grid, y) {
+        if(grid.rowFills[y] !== grid.width) {
+            // Rows that aren't full can't be identical to other rows.
+            return false;
+        }
+        
         for(var yOther = 0; yOther < grid.height; ++yOther) {
             if(yOther === y) {
+                continue;
+            }
+            if(grid.rowFills[yOther] !== grid.width) {
+                // Rows that aren't full can't be identical to other rows.
                 continue;
             }
             if(twoRowsIdentical(grid, y, yOther)) {
@@ -546,8 +563,17 @@ require(['src/Grid'], function (Grid) {
     }
     
     function anyColumnIdenticalToThis(grid, x) {
+        if(grid.colFills[x] !== grid.height) {
+            // Columns that aren't full can't be identical to other columns.
+            return false;
+        }
+    
         for(var xOther = 0; xOther < grid.width; ++xOther) {
             if(xOther === x) {
+                continue;
+            }
+            if(grid.colFills[xOther] !== grid.height) {
+                // Columns that aren't full can't be identical to other columns.
                 continue;
             }
             if(twoColumnsIdentical(grid, x, xOther)) {
@@ -589,16 +615,25 @@ require(['src/Grid'], function (Grid) {
         return null;
     }
     
-    function renderGridToElement(g) {
+    function renderGridToElement(grid) {
         var outHtml = "<pre>";
         
-        for(var y = 0; y < g.height; ++y) {
-            for(var x = 0; x < g.width; ++x) {
-                var cellValue = g.get(x, y);
+        for(var y = 0; y < grid.height; ++y) {
+            for(var x = 0; x < grid.width; ++x) {
+                var cellValue = grid.get(x, y);
                 outHtml += cellValue === emptyCellValue ? "-" : cellValue;
             }
+            outHtml += " - " + grid.rowFills[y];
             outHtml += "<br />";
         }
+        outHtml += "<br />";
+        outHtml += "Col fills: ";
+        for(var x = 0; x < grid.width; ++x) {
+            outHtml += "" + grid.colFills[x] + ",";
+        }
+        
+        outHtml += "<br />";
+        outHtml += "numCellsFilled: " + grid.numCellsFilled;
         
         outHtml += "</pre>";
         
